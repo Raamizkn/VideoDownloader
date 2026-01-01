@@ -175,21 +175,32 @@ function updateDownloadsList() {
                            download.status === 'error' ? 'error' : 'downloading';
 
         item.innerHTML = `
-            <div class="download-title">${escapeHtml(download.title)}</div>
+            <div class="download-header">
+                <div class="download-title">${escapeHtml(download.title)}</div>
+                <button class="btn-remove" onclick="removeDownload('${download.id}')">✕</button>
+            </div>
             <div class="download-url">${escapeHtml(download.url)}</div>
             ${download.status === 'downloading' ? `
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${download.progress}%"></div>
                     </div>
-                    <div class="progress-text">${download.progress.toFixed(1)}%</div>
+                    <div class="progress-stats">
+                        <span class="progress-text">${download.progress.toFixed(1)}%</span>
+                        ${download.speed ? `<span class="download-speed">${download.speed}</span>` : ''}
+                        ${download.eta ? `<span class="download-eta">ETA: ${download.eta}</span>` : ''}
+                    </div>
                 </div>
             ` : ''}
             <div class="download-status ${statusClass}">
                 Status: ${download.status.charAt(0).toUpperCase() + download.status.slice(1)}
             </div>
-            ${download.filename ? `
-                <div class="download-filename">Saved as: ${escapeHtml(download.filename)}</div>
+            ${download.status === 'completed' && download.filename ? `
+                <div class="download-actions">
+                    <a href="/download/${encodeURIComponent(download.filename)}" class="btn-download-file" download>
+                        Download to Computer
+                    </a>
+                </div>
             ` : ''}
             ${download.error ? `
                 <div class="download-status error">Error: ${escapeHtml(download.error)}</div>
@@ -205,6 +216,17 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Remove a download from history
+async function removeDownload(downloadId) {
+    try {
+        await fetch(`${API_BASE}/api/clear/${downloadId}`, { method: 'POST' });
+        activeDownloads.delete(downloadId);
+        updateDownloadsList();
+    } catch (error) {
+        console.error('Error removing download:', error);
+    }
 }
 
 // Event listeners

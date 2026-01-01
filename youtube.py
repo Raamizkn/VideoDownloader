@@ -10,16 +10,19 @@ def downloadvid(url, save_path):
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
-        # Define download options with stealth settings
+        # Define download options with robust headers
         ydl_opts = {
             'format': 'best',
             'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
-            'extractor_args': {
-                'youtube': {
-                    'player_client': ['ios', 'android', 'web'],
-                }
+            'nocheckcertificate': True,
+            'cachedir': False,
+            'headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+                'Accept': '*/*',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Origin': 'https://www.youtube.com',
+                'Referer': 'https://www.youtube.com/',
             },
-            'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
         }
 
         # Download the video

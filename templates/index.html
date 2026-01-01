@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>YouTube Video Downloader</h1>
+            <p class="subtitle">Download your favorite YouTube videos quickly and easily</p>
+        </div>
+
+        <div class="download-form">
+            <div class="form-group">
+                <label for="video-url">Video URL</label>
+                <input 
+                    type="text" 
+                    id="video-url" 
+                    placeholder="https://www.youtube.com/watch?v=..." 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="save-path">Save Path (Optional)</label>
+                <input 
+                    type="text" 
+                    id="save-path" 
+                    placeholder="Leave empty to use default downloads folder"
+                >
+                <small>Default: ./downloads</small>
+            </div>
+
+            <button id="download-btn" class="download-button">
+                <span class="btn-text">Download Video</span>
+                <span class="btn-loader" style="display: none;">Loading...</span>
+            </button>
+        </div>
+
+        <div id="status-message" class="status-message" style="display: none;"></div>
+
+        <div id="downloads-section" class="downloads-section" style="display: none;">
+            <h2>Active Downloads</h2>
+            <div id="downloads-list"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

@@ -44,7 +44,6 @@ def downloadvid(url, save_path, download_id):
         ydl_opts = {
             'format': 'best',
             'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
-            'cookiesfrombrowser': ('chrome',),
             'progress_hooks': [progress_hook],
         }
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Video Downloader</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='yt-fav.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/Squares.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -11,6 +12,9 @@
     <div id="squares-bg" class="squares-container"></div>
     <div class="container">
         <div class="header">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='yt-fav.png') }}" alt="Logo" class="site-logo">
+            </div>
             <h1>YouTube Video Downloader</h1>
             <p class="subtitle">Download your favorite YouTube videos quickly and easily</p>
         </div>
@@ -47,6 +51,15 @@
         <div id="downloads-section" class="downloads-section" style="display: none;">
             <h2>Active Downloads</h2>
             <div id="downloads-list"></div>
+        </div>
+
+        <div class="footer-attribution">
+            <p>by <a href="https://raamizkniazi.vercel.app" target="_blank" class="attribution-link">Raamiz Khan Niazi</a></p>
+            <div class="footer-links">
+                <a href="https://github.com/Raamizkn" target="_blank" class="footer-link">GitHub</a>
+                <span class="footer-separator">•</span>
+                <a href="https://raamizkniazi.vercel.app" target="_blank" class="footer-link">Portfolio</a>
+            </div>
         </div>
     </div>
 

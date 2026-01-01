@@ -43,10 +43,19 @@ def downloadvid(url, save_path, download_id):
                 if 'filename' in d:
                     active_downloads[download_id]['filename'] = os.path.basename(d['filename'])
 
-        # Define download options
+        # Define download options with stealth settings
         ydl_opts = {
-            'format': 'best',  # Download best quality
-            'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),  # Save file path
+            'format': 'best',
+            'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['ios', 'android', 'web'],
+                }
+            },
+            'nocheckcertificate': True,
+            'quiet': True,
+            'no_warnings': True,
+            'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
             'progress_hooks': [progress_hook],
         }
 

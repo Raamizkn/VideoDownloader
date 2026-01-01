@@ -6,7 +6,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #F8F9FB;
+    background-color: transparent;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -73,9 +73,9 @@ body {
 
 .form-group input:focus {
     outline: none;
-    border-color: #FF0033;
+    border-color: #FF6688;
     background: #FFFFFF;
-    box-shadow: 0 0 0 4px rgba(255, 0, 51, 0.08);
+    box-shadow: 0 0 0 4px rgba(255, 102, 136, 0.08);
 }
 
 .form-group input::placeholder {
@@ -92,7 +92,7 @@ body {
 .download-button {
     width: 100%;
     padding: 18px 32px;
-    background: #FF0033;
+    background: #FF6688;
     color: #FFFFFF;
     border: none;
     border-radius: 14px;
@@ -104,13 +104,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    box-shadow: 0 4px 14px rgba(255, 0, 51, 0.2);
+    box-shadow: 0 4px 14px rgba(255, 102, 136, 0.2);
 }
 
 .download-button:hover:not(:disabled) {
-    background: #E6002E;
+    background: #FF4D79;
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(255, 0, 51, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 102, 136, 0.3);
 }
 
 .download-button:active:not(:disabled) {
@@ -207,7 +207,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: #FF0033;
+    background: #FF6688;
     border-radius: 10px;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 0%;
@@ -231,8 +231,8 @@ body {
 }
 
 .download-status.downloading {
-    color: #FF0033;
-    background: rgba(255, 0, 51, 0.05);
+    color: #FF6688;
+    background: rgba(255, 102, 136, 0.05);
 }
 
 .download-status.completed {

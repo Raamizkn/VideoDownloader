@@ -9,7 +9,11 @@ app = Flask(__name__)
 CORS(app)
 
 # Store downloads directory
-DOWNLOADS_DIR = os.path.join(os.path.dirname(__file__), 'downloads')
+# Use mounted disk path if available (Render), otherwise use local downloads folder
+if os.path.exists('/opt/render/project/src/downloads'):
+    DOWNLOADS_DIR = '/opt/render/project/src/downloads'
+else:
+    DOWNLOADS_DIR = os.path.join(os.path.dirname(__file__), 'downloads')
 
 # Ensure downloads directory exists
 if not os.path.exists(DOWNLOADS_DIR):
@@ -121,5 +125,6 @@ def list_downloads():
     return jsonify(active_downloads)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(debug=True, host='0.0.0.0', port=port)
 

@@ -4,12 +4,12 @@ A modern web-based YouTube video downloader with a beautiful user interface.
 
 ## Features
 
-- 🎨 Modern, responsive web interface
-- 📥 Download YouTube videos in best quality
-- 📊 Real-time download progress tracking
-- 🎯 Multiple simultaneous downloads
-- 💾 Custom save path support
-- ✨ Beautiful gradient UI design
+- Modern, responsive web interface
+- Download YouTube videos in best quality
+- Real-time download progress tracking
+- Multiple simultaneous downloads
+- Custom save path support
+- YouTube-inspired red color scheme
 
 ## Installation
 
@@ -58,6 +58,35 @@ VideoDownloader/
 │       └── main.js    # Frontend JavaScript
 └── downloads/         # Default download folder (created automatically)
 ```
+
+## Deployment
+
+### Deploy to Render (Recommended)
+
+Render is perfect for this application as it supports long-running processes and persistent storage.
+
+1. Push your code to GitHub
+2. Go to [render.com](https://render.com) and create a new Web Service
+3. Connect your GitHub repository
+4. Use these settings:
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn app:app`
+5. Add a persistent disk (optional but recommended):
+   - Name: `downloads-disk`
+   - Mount Path: `/opt/render/project/src/downloads`
+   - Size: 1 GB
+
+See [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md) for detailed deployment instructions.
+
+### Local Development
+
+The original `youtube.py` script is preserved for CLI usage. For web interface:
+
+```bash
+python app.py
+```
+
+Then visit `http://localhost:8080`
 
 ## Notes
 

@@ -1,0 +1,13 @@
+downloads/
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+.git/
+*.md
+.vercelignore
+vercel.json
+api/
+VERCEL_DEPLOYMENT.md
+

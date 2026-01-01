@@ -18,18 +18,16 @@ if not os.path.exists(DOWNLOADS_DIR):
 # Store active downloads
 active_downloads = {}
 
-def downloadvid(url, save_path, download_id):
-    """Download video with progress tracking"""
+def downloadvid(url, save_path, download_id, format_type='video'):
+    """Download video or audio with progress tracking"""
     try:
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
         def progress_hook(d):
             if d['status'] == 'downloading':
-                # Handle fragment-based progress (common for YouTube)
                 downloaded = d.get('downloaded_bytes', 0)
                 total = d.get('total_bytes') or d.get('total_bytes_estimate')
-                
                 if total:
                     percent = (downloaded / total) * 100
                     active_downloads[download_id]['progress'] = round(percent, 1)
@@ -39,29 +37,41 @@ def downloadvid(url, save_path, download_id):
                         active_downloads[download_id]['progress'] = float(p_str)
                     except:
                         pass
-                
-                # If we have speed and ETA, we can add those too
                 if '_speed_str' in d:
                     active_downloads[download_id]['speed'] = d['_speed_str']
                 if '_eta_str' in d:
                     active_downloads[download_id]['eta'] = d['_eta_str']
-
             elif d['status'] == 'finished':
                 active_downloads[download_id]['progress'] = 100
                 active_downloads[download_id]['status'] = 'completed'
 
-        # Define download options with speed optimizations
-        ydl_opts = {
+        # Set format based on type
+        if format_type == 'audio':
+            # Prioritize m4a as it's more compatible than webm without conversion
+            ydl_format = 'bestaudio[ext=m4a]/bestaudio/best'
+        else:
             # Use 'best' instead of 'bestvideo+bestaudio' to avoid ffmpeg merging requirement
-            'format': 'best[ext=mp4]/best',
+            ydl_format = 'best[ext=mp4]/best'
+
+        # Define download options with speed and bot-bypass optimizations
+        ydl_opts = {
+            'format': ydl_format,
             'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
             'nocheckcertificate': True,
             'cachedir': False,
-            # Speed optimizations
-            'concurrent_fragment_downloads': 5, # Reduced slightly for better stability without ffmpeg
-            'buffersize': 1024 * 1024, # 1MB buffer
+            'concurrent_fragment_downloads': 5,
+            'buffersize': 1024 * 1024,
+            # Stealth settings for Render
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android', 'ios', 'web'],
+                    'player_skip': ['webpage', 'configs'],
+                }
+            },
             'headers': {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
             },
             'progress_hooks': [progress_hook],
         }
@@ -73,6 +83,7 @@ def downloadvid(url, save_path, download_id):
             active_downloads[download_id]['filename'] = os.path.basename(filename)
             active_downloads[download_id]['status'] = 'completed'
             active_downloads[download_id]['progress'] = 100
+            active_downloads[download_id]['format'] = format_type # Ensure format persists
 
     except Exception as e:
         active_downloads[download_id]['status'] = 'error'
@@ -86,6 +97,8 @@ def index():
 def download():
     data = request.json
     url = data.get('url')
+    format_type = data.get('format', 'video') # Default to video
+    
     if not url:
         return jsonify({'error': 'URL is required'}), 400
     
@@ -94,12 +107,13 @@ def download():
         'status': 'downloading',
         'progress': 0,
         'url': url,
+        'format': format_type,
         'title': 'Fetching info...',
         'filename': None,
         'error': None
     }
     
-    thread = threading.Thread(target=downloadvid, args=(url, DOWNLOADS_DIR, download_id))
+    thread = threading.Thread(target=downloadvid, args=(url, DOWNLOADS_DIR, download_id, format_type))
     thread.daemon = True
     thread.start()
     

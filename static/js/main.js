@@ -37,6 +37,7 @@ function isValidYouTubeUrl(url) {
 async function startDownload() {
     const url = videoUrlInput.value.trim();
     const savePath = savePathInput.value.trim() || null;
+    const format = document.querySelector('input[name="format"]:checked').value;
 
     // Validate URL
     if (!url) {
@@ -63,7 +64,8 @@ async function startDownload() {
             },
             body: JSON.stringify({
                 url: url,
-                save_path: savePath
+                save_path: savePath,
+                format: format
             })
         });
 
@@ -79,7 +81,8 @@ async function startDownload() {
             url: url,
             status: 'downloading',
             progress: 0,
-            title: 'Loading...'
+            title: 'Loading...',
+            format: format
         });
 
         // Start polling for status
@@ -120,6 +123,7 @@ async function pollDownloadStatus(downloadId) {
             const data = await response.json();
 
             if (response.ok) {
+                const currentFormat = activeDownloads.get(downloadId)?.format;
                 activeDownloads.set(downloadId, {
                     id: downloadId,
                     url: data.url,
@@ -127,7 +131,8 @@ async function pollDownloadStatus(downloadId) {
                     progress: data.progress || 0,
                     title: data.title || 'Unknown',
                     filename: data.filename,
-                    error: data.error
+                    error: data.error,
+                    format: data.format || currentFormat
                 });
 
                 updateDownloadsList();
@@ -176,7 +181,10 @@ function updateDownloadsList() {
 
         item.innerHTML = `
             <div class="download-header">
-                <div class="download-title">${escapeHtml(download.title)}</div>
+                <div class="download-title">
+                    <span class="format-badge ${download.format || 'video'}">${download.format === 'audio' ? 'AUDIO' : 'VIDEO'}</span>
+                    ${escapeHtml(download.title)}
+                </div>
                 <button class="btn-remove" onclick="removeDownload('${download.id}')">✕</button>
             </div>
             <div class="download-url">${escapeHtml(download.url)}</div>
@@ -232,6 +240,18 @@ async function removeDownload(downloadId) {
 // Event listeners
 downloadBtn.addEventListener('click', startDownload);
 
+// Change button text based on format selection
+document.querySelectorAll('input[name="format"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        const btnText = downloadBtn.querySelector('.btn-text');
+        if (e.target.value === 'audio') {
+            btnText.textContent = 'Download Audio';
+        } else {
+            btnText.textContent = 'Download Video';
+        }
+    });
+});
+
 videoUrlInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         startDownload();
@@ -259,7 +279,8 @@ window.addEventListener('load', async () => {
                     progress: download.progress || 0,
                     title: download.title || 'Unknown',
                     filename: download.filename,
-                    error: download.error
+                    error: download.error,
+                    format: download.format || (download.filename && (download.filename.endsWith('.m4a') || download.filename.endsWith('.webm')) ? 'audio' : 'video')
                 });
                 
                 if (download.status === 'downloading') {

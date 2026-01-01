@@ -95,6 +95,29 @@ body {
     color: #BBBBBB;
 }
 
+.format-options {
+    display: flex;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+.format-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #444444;
+    font-weight: 500;
+}
+
+.format-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #FF0033;
+    cursor: pointer;
+}
+
 .form-group small {
     display: block;
     margin-top: 6px;
@@ -199,6 +222,29 @@ body {
     font-size: 16px;
     line-height: 1.4;
     flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.format-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.format-badge.video {
+    background: #FF0033;
+    color: #FFFFFF;
+}
+
+.format-badge.audio {
+    background: #111111;
+    color: #FFFFFF;
 }
 
 .btn-remove {
